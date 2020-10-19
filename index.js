@@ -1,10 +1,11 @@
-const bodyParser = require('body-parser');
+const morgan = require('morgan');
 const express = require('express');
 const app = express ();
-const { pokemon } = require('./pokedex.json');
+const pokemon = require('./routes/pokemon');
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true}));
+app.use(morgan('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 /*
 Verbos HTTP
@@ -18,39 +19,14 @@ operdaor ternario es: condicion ? valor si verdadero : valor si falo;
 
 app.get("/",(req, res, next) =>
 {
-    return res.status(200).send("Bienvenido al pokedex");
+    return res.status(200).json({ code: 1, message: "Bienvenido a la pokedex" });
 });
 
-app.post("/pokemon", (req, res, next) =>
-{
-    return res.status(200).send(req.body);
-});
+app.use("/pokemon", pokemon);
 
-app.get("/pokemon", (req, res, next) =>
-{
-   return res.status(200).send(pokemon);
-});
-
-app.get('/pokemon/:id([0-9]{1,3})', (req, res, next) =>
-{
-    const id = req.params.id - 1;
-    (id >= 0 && id <= 150) ? 
-    res.status(200).send(pokemon[req.params.id-1]) :
-    res.status(404).send("Pokemon no encontrado.");
-
-});
-
-app.get('/pokemon/:name([A-Za-z]+)', (req, res, next) =>
-{
-    const name = req.params.name;
-
-    const pk = pokemon.filter((p) => {
-       return (p.name.toUpperCase() == name.toUpperCase()) && p ;
-    });
-
-    (pk.length > 0) ? 
-    res.status(200).send(pk) : 
-    res.status(404).send("Pokemon no encontrado");
+app.use((req, res, next) =>
+    {
+        return res.status(404).json({code: 404, message: "URL no encontrado"})
 });
 
 app.listen(process.env.PORT || 3000, () =>
