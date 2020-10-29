@@ -2,6 +2,7 @@ const morgan = require('morgan');
 const express = require('express');
 const app = express ();
 const pokemon = require('./routes/pokemon');
+const user1 = require('./routes/user1')
 
 app.use(morgan('dev'));
 app.use(express.json());
@@ -23,6 +24,8 @@ app.get("/",(req, res, next) =>
 });
 
 app.use("/pokemon", pokemon);
+
+app.use("/user1", user1);
 
 app.use((req, res, next) =>
     {
