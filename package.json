@@ -1,5 +1,5 @@
 {
-  "name": "express-workshop-a3",
+  "name": "express-workshop",
   "version": "1.0.0",
   "description": "an API REST using express.js",
   "main": "index.js",
